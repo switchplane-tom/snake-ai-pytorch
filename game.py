@@ -31,6 +31,9 @@ class SnakeGameAI:
     def __init__(self, w=640, h=480):
         self.w = w
         self.h = h
+        self.n_games = 0
+        self.score = 0
+        self.best_score = 0
         # init display
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
@@ -51,6 +54,7 @@ class SnakeGameAI:
         self.food = None
         self._place_food()
         self.frame_iteration = 0
+        self.n_games += 1
 
 
     def _place_food(self):
@@ -88,6 +92,9 @@ class SnakeGameAI:
             self._place_food()
         else:
             self.snake.pop()
+
+        if self.score > self.best_score:
+            self.best_score = self.score
         
         # 5. update ui and clock
         self._update_ui()
@@ -118,8 +125,11 @@ class SnakeGameAI:
 
         pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
 
-        text = font.render("Score: " + str(self.score), True, WHITE)
+        text = font.render("Score: " + str(self.score) + " Record: " + str(self.best_score), True, WHITE)
         self.display.blit(text, [0, 0])
+
+        text = font.render("Game " + str(self.n_games), True, WHITE)
+        self.display.blit(text, [0, self.h-25])
         pygame.display.flip()
 
 
